@@ -1,21 +1,13 @@
-obj-m := secbulk.o
-secbulk-m := secbulk.o
 
-BASEDIR := /lib/modules/$(shell uname -r)
-KERNELDIR ?= $(BASEDIR)/build
-PWD :=$(shell pwd)
+CURRENT_PATH:=$(shell pwd)
+LINUX_KERNEL_PATH:=/lib/modules/$(shell uname -r)/build
 
-.PHONY: all
-all: clean modules
+all:
+	$(MAKE) -C $(LINUX_KERNEL_PATH) M=$(CURRENT_PATH) modules
 
-.PHONY:modules
-modules:
-	$(MAKE) -C $(KERNELDIR) SUBDIRS=$(PWD) modules
+clean:   
+	rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
 
-.PHONY:clean
-clean:
-	$(MAKE) -C $(KERNELDIR) SUBDIRS=$(PWD) clean
+obj-m += secbulk.o
 
-.PHONY:install
-install:
-	$(MAKE) -C $(KERNELDIR) SUBDIRS=$(PWD) INSTALL_MOD_DIR=$(RTKDIR) modules_install
+

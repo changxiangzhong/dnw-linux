@@ -115,3 +115,39 @@ some U-Boot commands special for FL Ok6410
 	# "192.168.0.231" is your host ip; "192.168.0.232" is your board's ip;
 	# "192.168.0.201" is gateway; "255.255.255.0" is mask.
 
+
+
+========================Chang's update=============================
+git clone https://github.com/Torchwoods/dnw-linux
+cd src/driver/
+vi Makefile
+然后把makfile替换成下面内容
+
+```
+CURRENT_PATH:=$(shell pwd)
+LINUX_KERNEL_PATH:=/lib/modules/$(shell uname -r)/build
+
+all:
+        $(MAKE) -C $(LINUX_KERNEL_PATH) M=$(CURRENT_PATH) modules
+clean:
+        rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions
+
+obj-m += secbulk.o
+
+```
+
+在driver目录下执行
+sudo make
+
+sudo insmod secbulk.ko
+如果uboot中执行了dnw命令并用usb线连接了电脑的话，此时ls /dev可以看到secbulk0
+
+2.进入程序目录编译
+
+cd ../../
+
+sudo make install
+
+此时会产生dnw工具，使用这个工具即可传文件到tiny4412中
+
+Original author win9zz
